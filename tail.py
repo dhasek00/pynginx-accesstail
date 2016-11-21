@@ -61,6 +61,7 @@ def parse_log(lines, statsFile):
                 match_dict["500s"]["status"] += 1
                 match_dict["500s"]["routes"].append(route)
         except Exception:
+            print("Exception caught")
             continue
 
     # Use the Counter class to group and count the instances of routes
@@ -78,12 +79,15 @@ def parse_log(lines, statsFile):
                                                                match_dict["400s"],
                                                                match_dict["300s"],
                                                                match_dict["200s"]))
+    statsFile.flush()
+
 
     for count in match_dict["500s"]["count"].items():
         # Print the routes requested for 500x to StdOut
         print("{0}:{1}|s".format(count[0], count[1]))
         # Same as print but save to file
         statsFile.write("{0}:{1}|s\n".format(count[0], count[1]))
+        statsFile.flush()
 
 def main():
     # Run the code in a try block to catch errors or Ctrl-C
