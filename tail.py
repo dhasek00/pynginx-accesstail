@@ -37,28 +37,31 @@ def parse_log(lines, statsFile):
                    "500s": {"status": 0, "routes": []} }
 
     for line in lines:
-        # Split line using \ delimiter
-        line_split = line.rstrip().split("\"")
-        # Extract the status code and routes requested
-        route_match = re.match(RE_ROUTE, line_split[1])
-        status_match = re.match(RE_STATUS, line_split[2])
+        try:
+            # Split line using \ delimiter
+            line_split = line.rstrip().split("\"")
+            # Extract the status code and routes requested
+            route_match = re.match(RE_ROUTE, line_split[1])
+            status_match = re.match(RE_STATUS, line_split[2])
 
-        # If matches were found, save them
-        if route_match:
-            route = route_match.group(1)
-        if status_match:
-            status = int(status_match.group(1))
+            # If matches were found, save them
+            if route_match:
+                route = route_match.group(1)
+            if status_match:
+                status = int(status_match.group(1))
 
-        # Categorize the status codes and add to the dictionary
-        if status > 199 and status < 300:
-            match_dict["200s"] += 1
-        elif status > 299 and status < 400:
-            match_dict["300s"] += 1
-        elif status > 399 and status < 500:
-            match_dict["400s"] += 1
-        elif status > 499 and status < 600:
-            match_dict["500s"]["status"] += 1
-            match_dict["500s"]["routes"].append(route)
+            # Categorize the status codes and add to the dictionary
+            if status > 199 and status < 300:
+                match_dict["200s"] += 1
+            elif status > 299 and status < 400:
+                match_dict["300s"] += 1
+            elif status > 399 and status < 500:
+                match_dict["400s"] += 1
+            elif status > 499 and status < 600:
+                match_dict["500s"]["status"] += 1
+                match_dict["500s"]["routes"].append(route)
+        except Exception:
+            continue
 
     # Use the Counter class to group and count the instances of routes
     match_dict["500s"]["count"] = Counter(match_dict["500s"]["routes"])

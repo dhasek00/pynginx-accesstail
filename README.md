@@ -1,6 +1,7 @@
 # pynginx-accesstail
 
-pynginx-accesstail is a python script to parse an NGINX Access.log file.
+pynginx-accesstail is a python script to parse an NGINX Access.log file
+It will print results to stdout and write to /var/log/stats.log
 
 It requires the following NGINX log_format directive:
 
